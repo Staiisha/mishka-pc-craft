@@ -1,0 +1,159 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-build-form {
+  background: white;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 50vh;
+  
+    
+  
+    .form-buttons {
+      display: flex;
+      justify-content: space-between;
+  
+      .save {
+        background: #28a745;
+        color: white;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+  
+      .cancel {
+        background: #dc3545;
+        color: white;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+
+  
+
+  .form-buttons {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Inter', sans-serif;
+
+    .save {
+      background: #28a745;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .cancel {
+      background: #dc3545;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+    }
+  }
+}
+}
+.field {
+  position: relative;
+  margin-bottom: 20px;
+
+  .form-label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    background: white;
+    padding: 0 5px;
+    font-size: 14px;
+    color: #999;
+    transition: 0.3s ease;
+    pointer-events: none;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      border-color: #007bff;
+    }
+
+    &:focus + .form-label,
+    &:not(:placeholder-shown) + .form-label {
+      top: 0;
+      font-size: 12px;
+      color: #007bff;
+    }
+
+    &.invalid {
+      border-color: red;
+      background-color: #ffe6e6;
+    }
+
+    &.invalid + .form-label {
+      color: red;
+    }
+
+    &.valid {
+      border-color: green;
+      background-color: #e6ffe6;
+    }
+
+    &.valid + .form-label {
+      color: green;
+    }
+  }
+
+  .error-message, .success-message {
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+  }
+
+  .error-message {
+    color: red;
+
+    &::before {
+      content: "⚠";
+      margin-right: 5px;
+    }
+  }
+
+  .success-message {
+    color: green;
+
+    &::before {
+      content: "✔";
+      margin-right: 5px;
+    }
+  }
+}
+
+label {
+  color: purple;
+}

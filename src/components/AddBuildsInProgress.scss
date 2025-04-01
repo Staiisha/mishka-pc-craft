@@ -1,0 +1,92 @@
+.save {
+  background: linear-gradient(135deg, #40636e, rgb(114, 146, 136));
+  color: #ffffff;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.3s ease-in-out;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column; 
+
+  &:hover {
+    background: linear-gradient(135deg, #4c4e63, #6a5acd);
+    transform: scale(1.05);
+  }}
+
+ 
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .add-builds-in-progress-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 50vh;
+   
+  
+    
+  
+    .form-buttons {
+      display: flex;
+      justify-content: space-between;
+  
+      .save {
+        background: #28a745;
+        color: white;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+  
+      .cancel {
+        background: #dc3545;
+        color: white;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+    }
+  }
+  /* Общие стили для input и select */
+.filter-input, .input-select, .type, .component-select {
+  padding: 10px;
+  border: 2px solid #b3a3d5;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  width: auto;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  
+}
+
+
+.input-select:focus {
+  border-color: #6a5acd;
+  outline: none;
+  box-shadow: 0px 0px 5px rgba(106, 90, 205, 0.5);
+}
+
+
+input, select {
+  @extend .input-select;
+}
+  

@@ -1,0 +1,103 @@
+.form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .form-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: auto;
+  
+    h2 {
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+  
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+  
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        font-size: 14px;
+        color: #333;
+      }
+  
+      input, select {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+  
+      .form-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+  
+        button {
+          padding: 10px;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+  
+          &:first-of-type {
+            background: #4caf50;
+            color: white;
+          }
+  
+          &:last-of-type {
+            background: #f44336;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+  .date-input-wrapper {
+    position: relative;
+    width: 100%;
+  
+    input[type="date"] {
+      width: 95%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      appearance: none;
+      -webkit-appearance: none;
+      
+      &:focus + .placeholder-text,
+      &:valid + .placeholder-text {
+        transform: translateY(-22px) scale(0.9);
+        color: #6a5acd;
+      }
+    }
+  
+    .placeholder-text {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: purple;
+      pointer-events: none;
+      transition: all 0.2s ease;
+      background: white;
+      padding: 0 4px;
+      transform-origin: left center;
+      
+    }
+  }
+  

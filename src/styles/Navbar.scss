@@ -1,0 +1,36 @@
+.navbar {
+  display: flex;
+  align-items: center; 
+  padding: 20px;
+  background-color: #2b2d42;
+}
+
+.navbar-title {
+  margin-right: auto; 
+  font-size: 1rem;
+  color: white;
+  font-family: "Rock Salt", cursive;
+  text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 40px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  position: absolute; 
+  left: 50%; 
+  transform: translateX(-50%); 
+}
+
+.navbar-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.3em;
+  font-family: "Inter", sans-serif;
+  transition: color 0.3s ease-in-out;
+
+  &:hover {
+    color: #76c893;
+  }
+}

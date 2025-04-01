@@ -1,0 +1,29 @@
+/* src/styles/ReadyBuilds.scss */
+.ready-builds-page {
+  font-family: 'Inter', sans-serif;
+  padding: 20px;
+  margin: auto;
+  background-color: #E6E6FA;
+  border-radius: 10px;
+  max-width: 190vh;
+  
+  
+    h1 {
+      font-size: 2rem;
+    }
+  }
+p {
+  margin: 10px;
+}
+  .builds-list {
+    display: flex;
+    flex-wrap: wrap; // Позволит переносить элементы на новую строку, если не помещаются
+    gap: 20px; // Отступы между карточками
+    justify-content: flex-start; // Или center, если хочешь выровнять по центру
+  }
+  
+  .build-card {
+    flex: 1 1 calc(33.333% - 16px); // Карточки займут треть экрана, уменьшаясь при необходимости
+    max-width: 400px; // Ограничение по ширине
+  }
+  
