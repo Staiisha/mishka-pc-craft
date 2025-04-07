@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./AddComponentForm.scss";
+import "@/Components/AddComponentForm.scss";
 
 interface AddPeripheralsFormProps {
   onAdd: (component: any) => void;

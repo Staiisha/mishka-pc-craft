@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import { BuildComponent } from "./types";
-import "./AddBuildsInProgress.scss";
+import "@/components/AddBuildsInProgress.scss";
 
 interface AddBuildsInProgressProps {
   onAdd: (newBuild: BuildComponent) => void;

@@ -2,6 +2,8 @@
   font-family: 'Inter', sans-serif;
   padding: 20px;
   margin: auto;
+  justify-content: center;
+  text-align: center;
   background-color: #E6E6FA;
   border-radius: 10px;
   max-width: 190vh;
@@ -113,7 +115,7 @@
   }
 }
 
-.filter-input, .input-select {
+.filter-input, .input-select, .date-input-wrapper {
   padding: 10px;
   border: 2px solid #b3a3d5;
   border-radius: 8px;

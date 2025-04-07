@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-import "./AddBuildForm.scss";
+import '@/components/AddBuildForm.scss';
 
 interface Component {
   id: string;
@@ -146,7 +146,7 @@ const AddBuildForm: React.FC<AddBuildFormProps> = ({
           required 
         />
 
-        <label>Выберите наличие: </label>
+        <label className="one">Выберите наличие: </label>
         <select 
           value={formData.status} 
           onChange={e => setFormData({ ...formData, status: e.target.value })}
