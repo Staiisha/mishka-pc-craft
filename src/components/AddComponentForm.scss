@@ -18,17 +18,6 @@
   }}
 
  
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
   
   .add-component-form {
     background: white;
@@ -72,12 +61,10 @@
   border-radius: 8px;
   font-size: 16px;
   transition: all 0.3s ease;
-  width: 50vh;
   font-family: 'Inter', sans-serif;
   justify-content: center;
   text-align: center;
   flex-direction: column;
-  width: auto;
   
 }
 

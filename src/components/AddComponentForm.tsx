@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import "./AddComponentForm.scss";
+import "@/components/AddComponentForm.scss";
 
 interface AddComponentFormProps {
   onAdd: (component: any) => void;
   onClose: () => void;
-  componentData?: any; // Добавляем параметр для редактирования
+  componentData?: any; 
 }
 
 const AddComponentForm: React.FC<AddComponentFormProps> = ({ onAdd, onClose, componentData }) => {

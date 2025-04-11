@@ -65,16 +65,12 @@
     }
   }
   /* Общие стили для input и select */
-.filter-input, .input-select, .type, .component-select {
-  padding: 10px;
-  border: 2px solid #b3a3d5;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  width: auto;
-  justify-content: center;
-  text-align: center;
-  flex-direction: column;
+.filter-input, .input-select, .type, .component-select, textarea {
+ margin: 10px 0;
+   width: 70%;
+     border: 2px solid #b3a3d5;
+     border-radius: 8px;
+   padding: 10px;
   
 }
 
