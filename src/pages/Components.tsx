@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import '../styles/Components.scss';
 import AddComponentForm from "../components/AddComponentForm"; 
 import { Plus, Filter, Search, Trash, Edit } from "lucide-react";
+import { fetchWithAuth } from "../api";
 
 const Components: React.FC = () => {
   const [status, setStatus] = useState("");
@@ -18,7 +19,7 @@ const Components: React.FC = () => {
   useEffect(() => {
     const fetchComponents = async () => {
       try {
-        const response = await fetch('/api/components/'); // Дожидаемся выполнения запроса
+        const response = await fetchWithAuth('/api/components/'); // Дожидаемся выполнения запроса
         if (!response.ok) throw new Error('Ошибка загрузки компонентов');
   
         const data = await response.json(); // Дожидаемся обработки JSON
@@ -47,7 +48,7 @@ const Components: React.FC = () => {
     let response;
     if (editingComponent) {
       // Редактирование существующего компонента
-      response = await fetch(`/api/components/${editingComponent.id}/`, {
+      response = await fetchWithAuth(`/api/components/${editingComponent.id}/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +62,7 @@ const Components: React.FC = () => {
       });
     } else {
       // Добавление нового компонента
-      response = await fetch("/api/components/", {
+      response = await fetchWithAuth("/api/components/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -100,7 +101,7 @@ const Components: React.FC = () => {
 const handleDelete = async (id: number) => {
   if (window.confirm("Удалить компонент?")) {
     try {
-      const response = await fetch(`/api/components/${id}/`, {
+      const response = await fetchWithAuth(`/api/components/${id}/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Логин с обработкой ошибок и сохранением токенов
   const login = async (email: string, password: string) => {
     try {
-      const response = await api.post('/auth/', { email, password });
+      const response = await api.post('api/auth/', { email, password });
       
       localStorage.setItem('access', response.data.access);
       localStorage.setItem('refresh', response.data.refresh);

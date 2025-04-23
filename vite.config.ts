@@ -10,14 +10,11 @@ export default defineConfig({
         target: 'https://mishka-pc-craft-backend.ru',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/api'), // Ключевое изменение!
-        configure: (proxy) => {
-          proxy.on('proxyReq', (proxyReq) => {
-            proxyReq.setHeader('Origin', 'https://mishka-pc-craft-backend.ru');
-          });
-        }}
+        rewrite: (path) => path,
+      },
     },
   },
+
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

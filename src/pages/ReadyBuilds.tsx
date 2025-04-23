@@ -4,6 +4,7 @@ import myImage from '../images/1.png';
 import '@/styles/ReadyBuilds.scss';
 import { Plus, Filter, Search, Trash, Edit } from "lucide-react";
 import AddBuildForm from '../components/AddBuildForm';
+import { fetchWithAuth } from "../api";
 
 interface Component {
   id: string;
@@ -73,7 +74,7 @@ const ReadyBuilds: React.FC = () => {
   useEffect(() => {
     const fetchComponents = async () => {
       try {
-        const response = await fetch('/api/components');
+        const response = await fetchWithAuth('/api/components');
         if (!response.ok) throw new Error('Ошибка загрузки компонентов');
         const data = await response.json();
         
