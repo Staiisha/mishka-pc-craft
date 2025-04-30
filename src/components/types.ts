@@ -7,6 +7,8 @@ export interface Component {
   type: string;
   note: string;
   shippingprice: number;
+  details: string;
+  quantity: number;
 }
 
 export interface Build {
@@ -14,20 +16,23 @@ export interface Build {
   name: string;
   sell_price: number;
   note: string;
-  components: Component[];
+  components: {
+    component: string;  
+    quantity: number;
+  }[];
 }
 
 export interface BuildComponent {
-    id?: number;
-    name: string;
-    available: string;
-    sellingprice: string;
-    price: number;
-    costprice: string;
-    manufacturer: string;
-    type: string;
-    note?: string;
-    description?: string;
-    components?: number[]; // Добавляем массив ID компонентов
-  }
+  id?: string;
+  name: string;
+  description: string;
+  components: Array<{
+    component: string; 
+    quantity: number;
+  }>;
+  in_progress_price?: string;
+  planned_sell_price?: string | null;
+  date?: string;
+}
+
   

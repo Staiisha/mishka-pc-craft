@@ -1,78 +1,136 @@
 import { useState, useEffect } from "react";
-import '../styles/BuildsInProgress.scss';
-import AddBuildsInProgress from "../components/AddBuildsInProgress"; 
+import "../styles/BuildsInProgress.scss";
+import AddBuildsInProgress from "../components/AddBuildsInProgress";
 import { Plus, Filter, Search, Trash, Edit } from "lucide-react";
+import { fetchWithAuth } from "../api";
 
-const Build: React.FC = () => {
+export interface Component {
+  id: string;
+  name: string;
+  type: string;
+  details: string;
+  quantity: number;
+  status?: string; // если допускается отсутствие
+}
+
+interface Build {
+  id: string;
+  name: string;
+  description: string;
+  in_progress_price: string;
+  components: {
+    component: string;
+    quantity: number;
+    component_data?: {
+      id: string;
+      details: string;
+    };
+  }[];
+}
+
+const BuildsInProgress: React.FC = () => {
   const [availabilityFilter, setAvailabilityFilter] = useState("");
-  const [sellingpriceFilter, setSellingpriceFilter] = useState("");
+  const [inProgressPriceFilter, setInProgressPriceFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedBuild, setSelectedBuild] = useState<number | null>(null);
+  const [selectedBuild, setSelectedBuild] = useState<string | null>(null);
   const [editingBuild, setEditingBuild] = useState<any | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [builds, setBuilds] = useState<any[]>([]);
-  const [components, setComponents] = useState<any[]>([]); // Храним список компонентов
+  const [componentsFull, setComponentsFull] = useState<Component[]>([]);
 
-  // Загружаем сборки из localStorage
   useEffect(() => {
-    const savedBuilds = localStorage.getItem("inProgressBuilds");
-    if (savedBuilds) {
+    const fetchBuilds = async () => {
       try {
-        setBuilds(JSON.parse(savedBuilds) || []);
+        const response = await fetchWithAuth("/api/in_progress_builds/");
+        const data = await response.json();
+        setBuilds(data);
       } catch (error) {
-        console.error("Ошибка при загрузке inProgressBuilds:", error);
-        setBuilds([]);
+        console.error("Ошибка при загрузке сборок:", error);
       }
-    }
+    };
+    fetchBuilds();
   }, []);
 
-  // Загружаем список компонентов из localStorage
   useEffect(() => {
-    const savedComponents = localStorage.getItem("components");
-    if (savedComponents) {
+    const fetchComponents = async () => {
       try {
-        setComponents(JSON.parse(savedComponents) || []);
+        const response = await fetchWithAuth("/api/components");
+        if (!response.ok) throw new Error("Ошибка загрузки компонентов");
+        const data = await response.json();
+        setComponentsFull(data);
       } catch (error) {
-        console.error("Ошибка при загрузке компонентов:", error);
-        setComponents([]);
+        console.error("Ошибка загрузки компонентов:", error);
       }
-    }
+    };
+    fetchComponents();
   }, []);
-
-  // Сохраняем сборки в localStorage
-  useEffect(() => {
-    localStorage.setItem("inProgressBuilds", JSON.stringify(builds));
-  }, [builds]);
 
   const filteredBuilds = builds.filter((build) =>
     (build.name || "").toLowerCase().includes(searchQuery.toLowerCase()) &&
-    (sellingpriceFilter ? build.sellingprice <= Number(sellingpriceFilter) : true)
+    (inProgressPriceFilter ? build.in_progress_price <= Number(inProgressPriceFilter) : true)
   );
 
-  const handleAddBuild = (newBuild: any) => {
-    let updatedBuilds;
-    if (editingBuild) {
-      updatedBuilds = builds.map((build) =>
-        build.id === editingBuild.id ? { ...build, ...newBuild } : build
-      );
-    } else {
-      updatedBuilds = [...builds, { ...newBuild, id: Date.now() }];
+  const handleAddBuild = async (newBuild: any) => {
+    const isEditing = Boolean(editingBuild?.id);
+    const url = isEditing
+      ? `/api/in_progress_builds/${editingBuild.id}/`
+      : `/api/in_progress_builds/`;
+  
+    const method = isEditing ? "PUT" : "POST";
+  
+    try {
+      const payload = {
+        name: newBuild.name, // ← обязательно должно быть
+        in_progress_price: newBuild.in_progress_price || "0.00",
+        planned_sell_price: newBuild.planned_sell_price || null,
+        description: newBuild.description || "",
+        components: newBuild.components.map((c: any) => ({
+          quantity: c.quantity,
+          component: typeof c.component === "string" ? c.component : c.component.id,
+        })),
+      };
+  
+      const response = await fetchWithAuth(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        const updated = await fetchWithAuth("/api/in_progress_builds/");
+        const fullData = await updated.json();
+        setBuilds(fullData);
+        setIsAdding(false);
+      } else {
+        console.error("Ответ сервера:", data);
+        throw new Error(data.message || "Ошибка сервера");
+      }
+    } catch (error) {
+      console.error("Ошибка при сохранении:", error);
     }
-    setBuilds(updatedBuilds);
-    setIsAdding(false);
-    setEditingBuild(null);
   };
 
-  const handleDelete = (id: number) => {
-    if (window.confirm("Удалить сборку?")) {
-      const updatedBuilds = builds.filter((build) => build.id !== id);
-      setBuilds(updatedBuilds);
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Удалить сборку?")) return;
+    try {
+      await fetchWithAuth(`/api/in_progress_builds/${id}/`, { method: "DELETE" });
+      setBuilds((prev) => prev.filter((b) => b.id !== id));
+    } catch (error) {
+      console.error("Ошибка при удалении сборки:", error);
     }
   };
 
-  const handleEdit = (build: any) => {
-    setEditingBuild(build);
-    setIsAdding(true);
+  const handleEdit = async (build: any) => {
+    try {
+      const response = await fetchWithAuth(`/api/in_progress_builds/${build.id}/`);
+      const data = await response.json();
+      setEditingBuild(data);
+      setIsAdding(true);
+    } catch (error) {
+      console.error("Ошибка при загрузке сборки для редактирования:", error);
+    }
   };
 
   return (
@@ -81,26 +139,68 @@ const Build: React.FC = () => {
       <div className="top-bar">
         <div className="search-container">
           <Search className="icon" />
-          <input type="text" placeholder="Поиск..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+          <input
+            type="text"
+            placeholder="Поиск..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
-        <button className="add-btn" onClick={() => setIsAdding(true)}>
+        <button className="add-btn" onClick={() => { setIsAdding(true); setEditingBuild(null); }}>
           <Plus size={18} /> Добавить
         </button>
       </div>
+
       <div className="filter-container">
         <Filter className="icon" />
-        <input type="number" className="filter-input" placeholder="Цена продажи" value={sellingpriceFilter} onChange={(e) => setSellingpriceFilter(e.target.value)} />
+        <input
+          type="number"
+          className="filter-input"
+          placeholder="Себестоимость"
+          value={inProgressPriceFilter}
+          onChange={(e) => setInProgressPriceFilter(e.target.value)}
+        />
       </div>
+
       <div className="build-list">
         {filteredBuilds.map((build) => (
-          <div key={build.id} className={`build-card ${selectedBuild === build.id ? "selected" : ""}`} onClick={() => setSelectedBuild(build.id)}>
-            <div className="name"><strong>{build.name || ""}</strong></div>
+          <div
+            key={build.id}
+            className={`build-card ${selectedBuild === build.id ? "selected" : ""}`}
+            onClick={() => setSelectedBuild(build.id)}
+          >
+            <div className="name">
+              <strong>{build.name || ""}</strong>
+            </div>
             <div className="details">
-              <span>Цена продажи: {build.sellingprice} руб.</span>
-              <span>Себестоимость: {build.costprice} руб.</span>
-              <span>Компоненты: {build.components} </span>
-              <span>Описание:  {build.description}</span>
+              <span><strong>Текущая себестоимость: </strong>{build.in_progress_price} руб.</span>
+              <span><strong>Компоненты: </strong>
+  {Array.isArray(build.components) && build.components.length > 0 ? (
+build.components.map((component: any, index: number) => {
+  let name = "Неизвестный компонент";
 
+  // если component.component — это строка и выглядит как ID (например, 32-символьный hex)
+  if (typeof component.component === "string" && /^[a-f0-9]{32}$/.test(component.component)) {
+    const found = componentsFull.find((c) => c.id === component.component);
+    if (found) name = found.name;
+  } else if (typeof component.component === "string") {
+    // иначе это уже текстовое описание
+    name = component.component;
+  }
+
+  return (
+    <span key={index}>
+      {name} ({component.quantity || 1})
+    </span>
+  );
+})
+
+  ) : (
+    "Нет данных"
+  )}
+</span>
+
+              <span><strong>Описание: </strong>{build.description}</span>
             </div>
             <div className="actions">
               <button className="edit-btn" onClick={() => handleEdit(build)}>
@@ -113,16 +213,18 @@ const Build: React.FC = () => {
           </div>
         ))}
       </div>
+
       {isAdding && (
         <AddBuildsInProgress
           onAdd={handleAddBuild}
           onClose={() => setIsAdding(false)}
+          editingBuild={editingBuild} 
           buildData={editingBuild}
-          components={components} // Передаем список компонентов
+          components={componentsFull}
         />
       )}
     </div>
   );
 };
 
-export default Build;
+export default BuildsInProgress;

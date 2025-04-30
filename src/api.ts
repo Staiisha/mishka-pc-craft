@@ -1,4 +1,3 @@
-// api.ts
 export const fetchWithAuth = async (input: RequestInfo, init: RequestInit = {}) => {
   const accessToken = localStorage.getItem('access');
   const refreshToken = localStorage.getItem('refresh');

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
 
+
 .build-page {
   font-family: 'Inter', sans-serif;
   padding: 20px;
@@ -7,6 +8,7 @@
   background-color: #E6E6FA;
   border-radius: 10px;
   max-width: 190vh;
+  
 }
 
 .top-bar {
@@ -56,9 +58,10 @@
 
   
 .build-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    display: flex;
+  flex-wrap: wrap; // Позволит переносить элементы на новую строку, если не помещаются
+  gap: 20px; // Отступы между карточками
+  justify-content: flex-start; // Или cente
 }
 
 .build-card {

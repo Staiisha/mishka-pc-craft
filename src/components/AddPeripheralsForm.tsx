@@ -9,21 +9,19 @@ interface AddPeripheralsFormProps {
 
 const AddPeripheralsForm: React.FC<AddPeripheralsFormProps> = ({ onAdd, onClose, peripheralData }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    available: "",
-    sellingprice: "",
-    price: "",
-    deliveryprice: '',
-    manufacturer: "",
-    type: "",
-    note: "",
+    details: "",
+    status: "in_stock",
+    purchase_price: "",
+    sell_price: "",
+    type: "keyboard",
+    notes: "",
     keyboard: "",
     mouse: "",
     monitor: "",
-    kovrik: "",
-    wifi: "",
-    powercable: "",
-    imagecable: "",
+    carpet: "",
+    wifi_adapter: "",
+    power_cable: "",
+    image_cable: "",
     quantity: "",
 
 
@@ -32,22 +30,20 @@ const AddPeripheralsForm: React.FC<AddPeripheralsFormProps> = ({ onAdd, onClose,
   useEffect(() => {
     if (peripheralData) {
       setFormData({
-        name: peripheralData.name || "",
+        details: peripheralData.details || "",
         quantity: peripheralData.quantity || "",
-        deliveryprice: peripheralData.deliveryprice ? String(peripheralData.deliveryprice) : "",
-        available: peripheralData.available || "",
-        price: peripheralData.price ? String(peripheralData.price) : "",
-        sellingprice: peripheralData.sellingprice ? String(peripheralData.sellingprice) : "",
-        manufacturer: peripheralData.manufacturer || "",
+        status: peripheralData.status || "in_stock",
+        sell_price: peripheralData.sell_price ? String(peripheralData.sell_price) : "",
+        purchase_price: peripheralData.purchase_price? String(peripheralData.purchase_price) : "",
         type: peripheralData.type || "",
-        note: peripheralData.note || "",
+        notes: peripheralData.notes || "",
         keyboard: peripheralData.keyboard || "",
         mouse: peripheralData.mouse || "",
         monitor: peripheralData.monitor || "",
-        kovrik: peripheralData.kovrik || "",
-        wifi: peripheralData.wifi || "",
-        powercable: peripheralData.powercable || "",
-        imagecable: peripheralData. imagecable || "",
+        carpet: peripheralData.kovrik || "",
+        wifi_adapter: peripheralData.wifi || "",
+        power_cable: peripheralData.powercable || "",
+        image_cable: peripheralData. imagecable || "",
       });
     }
   }, [peripheralData]);
@@ -63,8 +59,16 @@ const AddPeripheralsForm: React.FC<AddPeripheralsFormProps> = ({ onAdd, onClose,
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAdd({ ...formData, price: Number(formData.price),quantity: Number(formData.quantity), sellingprice: Number(formData.sellingprice), deliveryprice: Number(formData.deliveryprice), available: formData.available, });
+    onAdd({ 
+      ...formData,
+      sell_price: Number(formData.sell_price).toFixed(2),
+      quantity: Number(formData.quantity),
+      purchase_price: Number(formData.purchase_price).toFixed(2),
+      status: formData.status,
+    });
+    onClose(); 
   };
+    
 
   return (
    <div className="modal">
@@ -72,38 +76,29 @@ const AddPeripheralsForm: React.FC<AddPeripheralsFormProps> = ({ onAdd, onClose,
   <h2>{peripheralData ? "Редактировать" : "Добавить периферию"}</h2>
 
     <input 
-      name="name" 
+      name="details" 
       placeholder="Название" 
-      value={formData.name} 
+      value={formData.details} 
       onChange={handleChange} 
       required 
     />
 
 
     <input 
-      name="price" 
-      type="number" 
-      placeholder="Себестоимость" 
-      value={formData.price} 
-      onChange={handleChange} 
-      required 
-    />
-
-    
-<input 
-      name="deliveryprice" 
-      type="number" 
-      placeholder="Стоимость доставки" 
-      value={formData.deliveryprice} 
-      onChange={handleChange} 
-      required 
-    />
-
-<input 
-      name="sellingprice" 
+      name="sell_price" 
       type="number" 
       placeholder="Цена продажи" 
-      value={formData.sellingprice} 
+      value={formData.sell_price} 
+      onChange={handleChange} 
+      required 
+    />
+
+
+<input 
+      name="purchase_price" 
+      type="number" 
+      placeholder="Цена закупки" 
+      value={formData.purchase_price} 
       onChange={handleChange} 
       required 
     />
@@ -117,17 +112,17 @@ const AddPeripheralsForm: React.FC<AddPeripheralsFormProps> = ({ onAdd, onClose,
       required 
     />
 
-<label htmlFor="available" className="form-label">Выберите наличие: </label>
+<label htmlFor="status" className="form-label">Выберите наличие: </label>
         <select
-          id="available"
-          name="available"
-          value={formData.available}
+          id="status"
+          name="status"
+          value={formData.status}
           onChange={handleChange}
           required
         >
-      <option value="В наличии">В наличии</option>
-      <option value="Нет в наличии">Нет в наличии</option>
-      <option value="Заказано">Заказано</option>
+      <option value="in_stock">В наличии</option>
+      <option value="sold">Продано</option>
+      <option value="ordered">Заказано</option>
     </select>
 
     <label htmlFor="type" className="form-label">Выберите тип: </label>
@@ -135,16 +130,16 @@ const AddPeripheralsForm: React.FC<AddPeripheralsFormProps> = ({ onAdd, onClose,
       <option value="keyboard">Клавиатура</option>
       <option value="monitor">Монитор</option>
       <option value="mouse">Мышь</option>
-      <option value="wifi">Wi-fi адаптер</option>
-      <option value="kovrik">Коврик</option>
-      <option value="imagecable">Кабель изображения</option>
-      <option value="powercable">Кабель питания</option>
+      <option value="wifi_adapter">Wi-fi адаптер</option>
+      <option value="carpet">Коврик</option>
+      <option value="image_cable">Кабель изображения</option>
+      <option value="power_cable">Кабель питания</option>
     </select>
 
     <textarea 
-          name="note" 
+          name="notes" 
           placeholder="Описание" 
-          value={formData.note} 
+          value={formData.notes} 
           onChange={handleChange} 
         />
 

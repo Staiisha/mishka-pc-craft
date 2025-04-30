@@ -17,7 +17,6 @@ interface ProductCardProps {
     in_build_quantity: number;
     component_data: ComponentData;
   }[];
-  description: string;
   imageUrl: string;
 }
 
@@ -28,7 +27,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   sell_price,
   profit,
   components = [],
-  description,
   imageUrl
 }) => {
   return (
@@ -59,11 +57,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         )}
       </div>
 
-      <div className="product-description">
-        <strong>Описание:</strong>
-        <p>{description}</p>
       </div>
-    </div>
   );
 };
 

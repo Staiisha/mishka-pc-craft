@@ -168,7 +168,7 @@ const handleDelete = async (id: number) => {
       <div className="filter-container">
         <Filter className="icon" />
         <select className="filter-input" value={filter} onChange={(e) => setFilter(e.target.value)}>
-          <option value="">Все</option>
+          <option value="">Выберите тип</option>
           <option value="cpu">Процессор</option> 
           <option value="vd">Видеокарта</option> 
           <option value="tower">Башня</option> 
@@ -186,7 +186,7 @@ const handleDelete = async (id: number) => {
         {/* Фильтр по наличию */}
         <select className="filter-input" value={status} onChange={(e) => setStatus(e.target.value)}>
 
-          <option value="in_stock">В наличии</option>
+          <option value="in_stock">Выберите наличие</option>
           <option value="ordered">Заказано</option>
           <option value="planned">Запланировано</option>
         </select>
@@ -200,14 +200,7 @@ const handleDelete = async (id: number) => {
           onChange={(e) => setPriceFilter(e.target.value)}
         />
 
-        {/* Фильтр по названию */}
-        <input
-          type="text"
-          className="filter-input"
-          placeholder="Название"
-          value={nameFilter}
-          onChange={(e) => setNameFilter(e.target.value)}
-        />
+
       </div>
 
       <div className="component-list">

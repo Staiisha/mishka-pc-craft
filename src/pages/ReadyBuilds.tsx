@@ -12,6 +12,8 @@ interface Component {
   status: string;
   details: string;
   quantity: number;
+  purchase_price?: string;
+  delivery_price?: string;
 }
 
 interface Build {
@@ -43,7 +45,7 @@ const ReadyBuilds: React.FC = () => {
   useEffect(() => {
     const fetchBuilds = async () => {
       try {
-        const response = await fetch('/api/ready_builds');
+        const response = await  fetchWithAuth('/api/ready_builds');
         console.log('Response status:', response.status);
         if (!response.ok) throw new Error('Ошибка загрузки сборок');
         const data = await response.json();
@@ -107,15 +109,16 @@ const ReadyBuilds: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm("Удалить сборку?")) {
       try {
-        const response = await fetch(`/api/ready_builds/${id}/`, {
+        const response = await fetchWithAuth(`/api/ready_builds/${id}/`, {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
         });
-
+  
         if (response.ok) {
           setBuilds(builds.filter(b => b.id !== id));
         } else {
           const errorData = await response.json();
+          console.error("Ошибка сервера:", errorData);
           alert(`Ошибка при удалении: ${errorData.message || "Неизвестная ошибка"}`);
         }
       } catch (error) {
@@ -123,6 +126,7 @@ const ReadyBuilds: React.FC = () => {
       }
     }
   };
+  
 
   // Редактирование сборки
   const handleEdit = (build: Build) => {
@@ -130,54 +134,65 @@ const ReadyBuilds: React.FC = () => {
     setIsAdding(true);
   };
 
-  // Добавление/обновление сборки
-  const handleAddOrUpdate = async (newBuild: any) => {
-    console.log("Отправляемые данные на сервер:", newBuild); 
-    try {
-      const url = editingBuild 
-        ? `/api/ready_builds/${editingBuild.id}/`
-        : "/api/ready_builds/";
-        
-      const method = editingBuild ? "PUT" : "POST";
+ // Добавление/обновление сборки
+const handleAddOrUpdate = async (newBuildData: any) => {
+  try {
+    const url = editingBuild 
+      ? `/api/ready_builds/${editingBuild.id}/`
+      : "/api/ready_builds/";
+    const method = editingBuild ? "PUT" : "POST";
 
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newBuild)
-      });
+    const requestBody = {
+      name: newBuildData.name,
+      status: newBuildData.status,
+      sell_price: newBuildData.sell_price,
+      components: newBuildData.components.map((comp: any) => ({
+        in_build_quantity: comp.quantity,
+        component: comp.component,  
+      })),
+    };
+    
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Ошибка сервера");
-      }
 
-      const savedBuild = await response.json();
-      console.log("Ответ сервера:", savedBuild); 
-      
+    const response = await fetchWithAuth(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody),
+    });
+
+    const responseData = await response.text();
+
+    if (response.ok) {
+      const savedBuild = JSON.parse(responseData);
+
       setBuilds(prev => {
         if (editingBuild) {
-          return prev.map(b => 
-            b.id === savedBuild.id ? {
-              ...savedBuild,
-              components: savedBuild.components || []
-            } : b
+          return prev.map(b => b.id === savedBuild.id
+            ? { ...savedBuild, components: savedBuild.components || [] }
+            : b
           );
         } else {
-          return [...prev, {
-            ...savedBuild,
-            components: savedBuild.components || []
-          }];
+          return [...prev, { ...savedBuild, components: savedBuild.components || [] }];
         }
       });
-      
+
       setIsAdding(false);
       setEditingBuild(undefined);
-    } catch (error) {
-      console.error("Ошибка сохранения:", error);
-      alert(`Ошибка при сохранении: ${error instanceof Error ? error.message : "Неизвестная ошибка"}`);
+    } else {
+      try {
+        const errorData = JSON.parse(responseData);
+        alert(`Ошибка: ${errorData.message || "Неизвестная ошибка сервера"}`);
+      } catch {
+        alert(`Ошибка ${response.status}: ${responseData}`);
+      }
     }
-  };
+  } catch (error) {
+    console.error("Ошибка при сохранении:", error);
+    alert(`Ошибка соединения: ${error instanceof Error ? error.message : "Неизвестная ошибка"}`);
+  }
+};
 
+  
   // Расчет прибыли для сборки
   const calculateProfit = (build: Build) => {
     if (!build.sell_price || !build.build_price) return 0;
@@ -233,7 +248,6 @@ const ReadyBuilds: React.FC = () => {
               sell_price={build.sell_price}
               profit={calculateProfit(build)}
               components={build.components}
-              description={build.description || "Описание отсутствует"}
               imageUrl={myImage}
             />
             <div className="actions">

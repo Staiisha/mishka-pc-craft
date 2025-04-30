@@ -8,6 +8,9 @@ interface Component {
   status: string;
   details: string;
   quantity: number;
+  purchase_price?: string;
+  delivery_price?: string;
+  
 }
 
 interface BuildComponent {
@@ -153,6 +156,7 @@ const AddBuildForm: React.FC<AddBuildFormProps> = ({
         >
           <option value="in_stock">В наличии</option>
           <option value="sold">Продано</option>
+          <option value="ordered">Заказано</option>
         </select>
 
         <label>Компоненты: </label>
