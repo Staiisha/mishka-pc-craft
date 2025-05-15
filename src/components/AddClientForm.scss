@@ -35,7 +35,7 @@
         color: #333;
       }
   
-      input, select {
+      input {
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 6px;
@@ -69,10 +69,10 @@
   }
   .date-input-wrapper {
     position: relative;
-    width: 100%;
+    width: 90%;
   
     input[type="date"] {
-      width: 95%;
+      width: 80%;
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -89,7 +89,7 @@
     .placeholder-text {
       position: absolute;
       left: 12px;
-      top: 50%;
+      top: 40%;
       transform: translateY(-50%);
       color: purple;
       pointer-events: none;

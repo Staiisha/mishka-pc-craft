@@ -135,7 +135,7 @@ const BuildsInProgress: React.FC = () => {
 
   return (
     <div className="build-page">
-      <h1>Сборки в процессе</h1>
+      <h1>Сборки в работе</h1>
       <div className="top-bar">
         <div className="search-container">
           <Search className="icon" />
@@ -174,31 +174,24 @@ const BuildsInProgress: React.FC = () => {
             </div>
             <div className="details">
               <span><strong>Текущая себестоимость: </strong>{build.in_progress_price} руб.</span>
-              <span><strong>Компоненты: </strong>
-  {Array.isArray(build.components) && build.components.length > 0 ? (
-build.components.map((component: any, index: number) => {
-  let name = "Неизвестный компонент";
+  <span><strong>Компоненты: </strong>
+{Array.isArray(build.components) && build.components.length > 0 ? (
+  build.components.map((component: any, index: number) => {
+    const name = component.component_data?.details || `ID: ${component.component_data?.id || "неизвестен"}`;
+    const quantity = component.in_build_quantity || 1;
 
-  // если component.component — это строка и выглядит как ID (например, 32-символьный hex)
-  if (typeof component.component === "string" && /^[a-f0-9]{32}$/.test(component.component)) {
-    const found = componentsFull.find((c) => c.id === component.component);
-    if (found) name = found.name;
-  } else if (typeof component.component === "string") {
-    // иначе это уже текстовое описание
-    name = component.component;
-  }
+    return (
+      <span key={index}>
+        {name} ({quantity})
+      </span>
+    );
+  })
+) : (
+  "Нет данных"
+)}
 
-  return (
-    <span key={index}>
-      {name} ({component.quantity || 1})
-    </span>
-  );
-})
-
-  ) : (
-    "Нет данных"
-  )}
 </span>
+
 
               <span><strong>Описание: </strong>{build.description}</span>
             </div>

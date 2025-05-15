@@ -1,37 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./AddClientForm.scss";
 
 interface AddClientFormProps {
-  onAdd: (component: any) => void;
+  onAdd: (client: any) => void;
   onClose: () => void;
-  componentData?: any; //
+  clientData?: any;
 }
 
-const AddClientForm: React.FC<AddClientFormProps> = ({ onAdd, onClose }) => {
+const AddClientForm: React.FC<AddClientFormProps> = ({ onAdd, onClose, clientData }) => {
   const [formData, setFormData] = useState<{ 
-    name: string; 
-    number: string; 
-    registrationDate: string; 
-    meetingDate: string; 
-    note: string; 
-    status: string 
+    first_name: string; 
+    last_name: string;
+    phone_number: string; 
+    email: string;
+    birth_date: string,
+    date_meeting: string; 
+    description: string; 
+    is_active: string;
   }>({
-    name: "",
-    number: "",
-    registrationDate: "", 
-    meetingDate: "", 
-    note: "",
-    status: "",
+    first_name: "",
+    is_active: '',
+    last_name:'',
+    phone_number: "",
+    email: '',
+    date_meeting: "", 
+    birth_date: '',
+   description: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+useEffect(() => {
+  if (clientData) {
+    setFormData({
+      first_name: clientData.first_name || "",
+      last_name: clientData.last_name || "",
+      phone_number: clientData.phone_number || "",
+      email: clientData.email || "",
+      birth_date: clientData.birth_date || "",
+      date_meeting: clientData.date_meeting
+        ? clientData.date_meeting.slice(0, 16)
+        : "",
+      description: clientData.description || "",
+      is_active: String(clientData.is_active),
+    });
+  }
+}, [clientData]); 
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onAdd({ ...formData });
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const clientToSend = {
+    ...formData,
+    is_active: formData.is_active === "true", 
+    birth_date: formData.birth_date || null,
+    date_meeting: formData.date_meeting || null,
+    phone_number: formData.phone_number.trim(),
   };
+
+  onAdd(clientToSend);
+};
+
 
   return (
     <div className="modal">
@@ -39,57 +70,80 @@ const AddClientForm: React.FC<AddClientFormProps> = ({ onAdd, onClose }) => {
         <h2>Добавить нового клиента</h2>
 
         <input 
-          name="name" 
+          name="first_name" 
           placeholder="Имя" 
-          value={formData.name} 
+          value={formData.first_name} 
           onChange={handleChange} 
           required 
         />
 
-        <select name="status" value={formData.status} onChange={handleChange} required>
-          <option className="stat" value="" disabled>Статус</option>
-          <option value="Активен">Активен</option>
-          <option value="Неактивен">Неактивен</option>
-        </select>
+            <input 
+          name="last_name" 
+          placeholder="Фамилия" 
+          value={formData.last_name} 
+          onChange={handleChange} 
+
+        />
+
+        <label htmlFor="is_active" className="form-label">Выберите статус: </label>
+        <select
+          id="is_active"
+          name="is_active"
+          value={formData.is_active}
+          onChange={handleChange}
+          required
+        >
+      <option value="true">Активен</option>
+      <option value="false">Неактивен</option>
+    </select>
+
+ 
+<div className="date-input-wrapper">
+  <input
+    name="birth_date"
+    type="date"
+    value={formData.birth_date}
+    onChange={handleChange}
+  />
+  <label className="placeholder-text">
+    {formData.birth_date ? "Дата рождения" : "Дата рождения"}
+  </label>
+</div>
+
+     <input 
+          name="email" 
+          placeholder="Email" 
+          value={formData.email} 
+          onChange={handleChange} 
+
+        />
 
         <input 
-          name="number" 
-          type="number" 
+          name="phone_number" 
+          type="text" 
           placeholder="Телефон" 
-          value={formData.number} 
+          value={formData.phone_number} 
           onChange={handleChange} 
-          required 
+          required
+    
         />
 
-<div className="date-input-wrapper">
-  <input
-    name="registrationDate"
-    type="date"
-    required
-    value={formData.registrationDate}
-    onChange={handleChange}
-  />
-  <label className="placeholder-text">
-    {formData.registrationDate ? "Дата регистрации" : "дата регистрации"}
-  </label>
-</div>
 
 <div className="date-input-wrapper">
   <input
-    name="meetingDate"
-    type="date"
-    required
-    value={formData.meetingDate}
+    name="date_meeting"
+    type="datetime-local"
+    value={formData.date_meeting}
     onChange={handleChange}
   />
   <label className="placeholder-text">
-    {formData.meetingDate ? "Дата встречи" : "дата встречи"}
+    {formData.date_meeting ? "Дата встречи" : "Дата встречи"}
   </label>
 </div>
-        <input 
-          name="note" 
+        <textarea
+          name="description" 
           placeholder="Примечание" 
-          value={formData.note} 
+          value={formData.description} 
           onChange={handleChange} 
         />
 
